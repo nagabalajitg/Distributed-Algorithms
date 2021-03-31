@@ -1,4 +1,4 @@
-package com.balaji.naga.resource;
+package com.balaji.naga.compute;
 
 import com.balaji.naga.communication.Channel;
 
@@ -6,34 +6,19 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-public class Process extends Thread implements Resource {
+public class Process extends Thread {
     private long id;
-    private Site site;
     private Set<Channel> chennels;
     private Queue<Long> waitingQueue;
 
-    private void init() {
+    Process(long id) {
+        this.id = id;
         this.waitingQueue = new PriorityQueue<>();
     }
 
-//    Process (Site site) {
-//        this.site = site;
-//        this.id = System.currentTimeMillis();
-//        this.init();
-//    }
-//
-//    Process (long id, Site site) {
-//        this.id = id;
-//        this.site = site;
-//        this.init();
-//    }
-
-
-    Process(long id) {
-        this.id = id;
-        this.init();
+    Process() {
+        this(System.currentTimeMillis());
     }
-
 
     long getProcessID () {
         return this.id;
