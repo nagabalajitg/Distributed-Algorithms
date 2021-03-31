@@ -1,2 +1,4 @@
-package com.balaji.naga.algorithms;public class SnapshotAlgorithms {
+package com.balaji.naga.algorithms;
+
+public interface SnapshotAlgorithms extends Algorithms {
 }

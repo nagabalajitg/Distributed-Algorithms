@@ -1,2 +1,3 @@
-package com.balaji.naga.algorithms;public class Algorithms {
+package com.balaji.naga.algorithms;
+public interface Algorithms {
 }
