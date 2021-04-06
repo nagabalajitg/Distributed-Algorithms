@@ -7,7 +7,6 @@ import com.balaji.naga.algorithms.SnapshotAlgorithms;
 import com.balaji.naga.message.LaiYangMessage;
 import com.balaji.naga.resource.communication.Channel;
 import com.balaji.naga.snapshot.LaiYangSnapshot;
-import com.balaji.naga.snapshot.Snapshot;
 
 
 import java.util.*;
@@ -43,41 +42,41 @@ public class LaiYangProcess extends Process implements SnapshotAlgorithms {
 
     public void snapshotGlobalState() {
         long timestamp = System.currentTimeMillis();
-        synchronized (this) {
-            LaiYangSnapshot lastSnapshot = getLastSnapshot();
-            if(lastSnapshot == null || !lastSnapshot.isInProgress()) {
-                LaiYangSnapshot newSnapshot = new LaiYangSnapshot(timestamp, this.getLocalState(), this.getProcessID());
+        LaiYangSnapshot lastSnapshot = getLastSnapshot();
+        int totalNoOfProcesses = getAllReadChannels().size() + 1;
 
-                Long lastSnapshotTime = lastSnapshot != null ? lastSnapshot.getTimestamp() : 0;
+        if(lastSnapshot == null || !lastSnapshot.isInProgress()) {
+            LaiYangSnapshot newSnapshot = new LaiYangSnapshot(timestamp, this.getLocalState(), this.getProcessID(), (long)totalNoOfProcesses);
 
-                WhiteMessageLog to = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, timestamp);
-                WhiteMessageLog from = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, lastSnapshotTime);
+            Long lastSnapshotTime = lastSnapshot != null ? lastSnapshot.getTimestamp() : 0;
 
-                laiYangSnapshots.add(newSnapshot);
-                setProcessColor(MessageColor.RED);
+            WhiteMessageLog to = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, timestamp);
+            WhiteMessageLog from = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, lastSnapshotTime);
 
-                for (Channel channel : getAllWriteChannels()) {
-                    List<WhiteMessageLog> messagesSent = new LinkedList<>();
-                    SortedSet<WhiteMessageLog> whiteMessages = getWhiteMessagesForChannel(channel.getChannelID());
-                    if (whiteMessages != null) {
-                        for (WhiteMessageLog log : whiteMessages.subSet(from, to)) {
-                            messagesSent.add(log);
-                        }
+            laiYangSnapshots.add(newSnapshot);
+            setProcessColor(MessageColor.RED);
+
+            for (Channel channel : getAllWriteChannels()) {
+                List<WhiteMessageLog> messagesSent = new LinkedList<>();
+                SortedSet<WhiteMessageLog> whiteMessages = getWhiteMessagesForChannel(channel.getChannelID());
+                if (whiteMessages != null) {
+                    for (WhiteMessageLog log : whiteMessages.subSet(from, to)) {
+                        messagesSent.add(log);
                     }
-                    newSnapshot.setSentMessage(channel.getChannelID(), messagesSent);
-                    super.sendMessage(new LaiYangMessage(MessageColor.RED, 0l, this.getProcessID(), channel.getProcess2().getProcessID()));
                 }
+                newSnapshot.setMessagesSentByInitiator(channel.getChannelID(), messagesSent);
+                super.sendMessage(new LaiYangMessage(MessageColor.RED, 0l, this.getProcessID(), channel.getProcess2().getProcessID()));
+            }
 
-                for (Channel channel : getAllReadChannels()) {
-                    List<WhiteMessageLog> messagesReceived = new LinkedList<>();
-                    SortedSet<WhiteMessageLog> whiteMessages = getWhiteMessagesForChannel(channel.getChannelID());
-                    if (whiteMessages != null) {
-                        for (WhiteMessageLog log : whiteMessages.subSet(from, to)) {
-                            messagesReceived.add(log);
-                        }
+            for (Channel channel : getAllReadChannels()) {
+                List<WhiteMessageLog> messagesReceived = new LinkedList<>();
+                SortedSet<WhiteMessageLog> whiteMessages = getWhiteMessagesForChannel(channel.getChannelID());
+                if (whiteMessages != null) {
+                    for (WhiteMessageLog log : whiteMessages.subSet(from, to)) {
+                        messagesReceived.add(log);
                     }
-                    newSnapshot.setReceivedMessage(channel.getChannelID(), messagesReceived);
                 }
+                newSnapshot.setMessageReceivedByInitiator(channel.getChannelID(), messagesReceived);
             }
         }
     }
@@ -90,7 +89,7 @@ public class LaiYangProcess extends Process implements SnapshotAlgorithms {
                 return diff > 0 ? 1 : diff == 0 ? 0 : -1;
             }
         }));
-        set.add(new WhiteMessageLog(boundType, processID, data, timestamp));
+        set.add(new WhiteMessageLog(boundType, data, processID , timestamp));
         channelIDToWhiteMessage.put(channelID, set);
     }
 

@@ -22,6 +22,7 @@ public class Lai_Yang_Tester {
 
     public static void test() {
         System.out.println("Start !");
+        LaiYangOrchestration orchestration = null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             System.out.print(Messages.ENTER_NO_OF_PROCESS);
@@ -30,7 +31,7 @@ public class Lai_Yang_Tester {
             System.out.print(Messages.ENTER_AMOUNT);
             String initialAmount = reader.readLine().trim();
 
-            LaiYangOrchestration orchestration = new LaiYangOrchestration();
+            orchestration = new LaiYangOrchestration();
             orchestration.createProcess(Integer.parseInt(command), Long.valueOf(initialAmount), ChannelType.FIFO);
             boolean flag = false;
 
@@ -58,20 +59,15 @@ public class Lai_Yang_Tester {
                             System.out.print(Messages.RECORD_SNAPSHOT_AT);
                             long at = Long.parseLong(reader.readLine().trim());
 
-                            orchestration.initiateGlobalSnapshotAt(at, 0l);
+                            orchestration.recordGlobalStateFrom(at);
                             break;
                         case 3 :
                             System.out.print(Messages.ENTER_PROCESS_ID);
                             long processID = Long.parseLong(reader.readLine().trim());
-
-                            LaiYangSnapshot snapshot = (LaiYangSnapshot) orchestration.getSnapshotOfProcess(processID);
+                            LaiYangSnapshot snapshot = (LaiYangSnapshot) orchestration.getLastGlobalSnapshotFromProcess(processID);
 
                             if (snapshot != null) {
-                                if (snapshot.isInProgress()) {
-                                    System.out.println(Messages.SNAPSHOT_IS_IN_PROGRESS);
-                                } else {
-                                    System.out.println(snapshot+"");
-                                }
+                                System.out.println(snapshot+"");
                             } else {
                                 System.out.println(Messages.SNAPSHOT_DOES_NOT_EXIST);
                             }
@@ -87,11 +83,15 @@ public class Lai_Yang_Tester {
                         break;
                     }
                 } catch (NumberFormatException nfe) {
-                    LOGGER.log(Level.SEVERE, nfe.getMessage(), nfe);
+                    System.out.println(Messages.ENTER_VALID_NUMBER);
                 }
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            if(orchestration != null) {
+                orchestration.shutdownAllProcess();
+            }
         }
         System.out.println("Ends !!");
     }

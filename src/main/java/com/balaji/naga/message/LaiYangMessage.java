@@ -79,39 +79,49 @@ public class LaiYangMessage extends DataMessage implements LaiYangSnapshotAlgori
     }
 
     private void processRedMessage(LaiYangProcess process, Channel channel) {
-        List<WhiteMessageLog> sentMessages = new LinkedList<>();
-        List<WhiteMessageLog> receivedMessages = new LinkedList<>();
-
-        Long localState = process.getLocalState();
-        Long currentTime = System.currentTimeMillis();
-        LaiYangSnapshot snapshot = process.hasSnapshot() ? process.getLastSnapshot() : null;
-        Long lastSnapshotTime = snapshot != null ? snapshot.getTimestamp() : 0;
-
-        WhiteMessageLog to = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, currentTime);
-        WhiteMessageLog from = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, lastSnapshotTime);
-
-        TreeSet<WhiteMessageLog> whiteMessagesSent = (TreeSet<WhiteMessageLog> )process.getWhiteMessagesForChannel(channel.getProcess2().getProcessID() + ":"+channel.getProcess1().getProcessID());
-        TreeSet<WhiteMessageLog> whiteMessagesReceived = (TreeSet<WhiteMessageLog> ) process.getWhiteMessagesForChannel(channel.getChannelID());
-
-        if (whiteMessagesSent != null) {
-            for (WhiteMessageLog log : whiteMessagesSent.subSet(from, to)) {
-                sentMessages.add(log);
+        if (process.getProcessColor() == MessageColor.RED) {
+            LaiYangSnapshot snapshot = process.getLastSnapshot();
+            if (snapshot != null && snapshot.isInProgress()) {
+                snapshot.processMessage(this);
+                if (!snapshot.isInProgress()) {
+                    process.setProcessColor(MessageColor.WHITE);
+                }
             }
-        }
+        } else {
+            List<WhiteMessageLog> sentMessages = new LinkedList<>();
+            List<WhiteMessageLog> receivedMessages = new LinkedList<>();
 
-        if (whiteMessagesReceived != null) {
-            for (WhiteMessageLog log : whiteMessagesReceived.subSet(from, to)) {
-                receivedMessages.add(log);
+            Long localState = process.getLocalState();
+            Long currentTime = System.currentTimeMillis();
+            LaiYangSnapshot snapshot = process.hasSnapshot() ? process.getLastSnapshot() : null;
+            Long lastSnapshotTime = snapshot != null ? snapshot.getTimestamp() : 0;
+
+            WhiteMessageLog to = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, currentTime);
+            WhiteMessageLog from = new WhiteMessageLog(MessageBoundType.INBOUND, -1l, -1l, lastSnapshotTime);
+
+            TreeSet<WhiteMessageLog> whiteMessagesSent = (TreeSet<WhiteMessageLog> )process.getWhiteMessagesForChannel(channel.getProcess2().getProcessID() + ":"+channel.getProcess1().getProcessID());
+            TreeSet<WhiteMessageLog> whiteMessagesReceived = (TreeSet<WhiteMessageLog> ) process.getWhiteMessagesForChannel(channel.getChannelID());
+
+            if (whiteMessagesSent != null) {
+                for (WhiteMessageLog log : whiteMessagesSent.subSet(from, to)) {
+                    sentMessages.add(log);
+                }
             }
+
+            if (whiteMessagesReceived != null) {
+                for (WhiteMessageLog log : whiteMessagesReceived.subSet(from, to)) {
+                    receivedMessages.add(log);
+                }
+            }
+
+            LaiYangMessage message = new LaiYangMessage(MessageColor.RED, 0l, process.getProcessID(), channel.getProcess1().getProcessID());
+
+            message.setMessageSent(sentMessages);
+            message.setMessageReceived(receivedMessages);
+            message.setProcessLocalState(localState);
+
+            process.sendMessage(message);
         }
-
-        LaiYangMessage message = new LaiYangMessage(MessageColor.RED, 0l, process.getProcessID(), channel.getProcess1().getProcessID());
-
-        message.setMessageSent(sentMessages);
-        message.setMessageReceived(receivedMessages);
-        message.setProcessLocalState(localState);
-
-        process.sendMessage(message);
     }
 
     public void processAtReceiver(Process process, Channel channel) {

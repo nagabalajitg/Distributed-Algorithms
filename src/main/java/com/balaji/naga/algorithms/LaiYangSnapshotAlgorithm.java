@@ -5,9 +5,8 @@ public interface LaiYangSnapshotAlgorithm extends SnapshotAlgorithms {
         RED, WHITE
     }
 
-
     class WhiteMessageLog {
-        public enum MessageBoundType{
+        public enum MessageBoundType {
             INBOUND, OUTBOUND
         }
 

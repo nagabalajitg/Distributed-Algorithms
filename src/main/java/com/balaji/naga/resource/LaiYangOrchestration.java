@@ -18,12 +18,12 @@ public class LaiYangOrchestration extends Orchestration {
         return new LaiYangProcess(processID, initialValue);
     }
 
-    public void initiateGlobalSnapshotAt(long processID, long data) {
+    public void recordGlobalStateFrom(long processID) {
         LaiYangProcess process = (LaiYangProcess) this.getProcess(processID);
         process.snapshotGlobalState();
     }
 
-    public Snapshot getSnapshotOfProcess(Long processID){
+    public Snapshot getLastGlobalSnapshotFromProcess(Long processID){
         LaiYangProcess process = (LaiYangProcess) this.getProcess(processID);
         if (process == null) {
             throw new IllegalArgumentException(Messages.INVALID_PROCESS_ID);

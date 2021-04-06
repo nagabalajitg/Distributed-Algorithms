@@ -91,6 +91,16 @@ public abstract class Orchestration {
         return processIDToProcess.size();
     }
 
+    public void shutdownAllProcess() {
+        try {
+            for(Thread thread : processIDToThread.values()) {
+                thread.destroy();
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
     public String toStringProcesses() {
         StringBuilder builder = new StringBuilder();
 
