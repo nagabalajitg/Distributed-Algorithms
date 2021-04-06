@@ -3,7 +3,7 @@ package com.balaji.naga.resource.communication;
 
 import com.balaji.naga.message.Message;
 import com.balaji.naga.resource.compute.Process;
-import com.balaji.naga.utils.ProjectMessages;
+import com.balaji.naga.utils.Messages;
 
 public interface Channel {
     enum ChannelType {
@@ -21,7 +21,7 @@ public interface Channel {
                 channel = new NonFifoChannel(process_1, process_2);
                 break;
             default:
-                throw new IllegalArgumentException(ProjectMessages.INVALID_CHANNEL_TYPE);
+                throw new IllegalArgumentException(Messages.INVALID_CHANNEL_TYPE);
         }
         return channel;
     }

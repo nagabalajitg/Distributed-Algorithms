@@ -2,7 +2,7 @@ package com.balaji.naga.resource.compute;
 
 import com.balaji.naga.message.Message;
 import com.balaji.naga.resource.communication.Channel;
-import com.balaji.naga.utils.ProjectMessages;
+import com.balaji.naga.utils.Messages;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,7 +46,7 @@ public class Process extends Thread {
     public Channel getWriteChannelForProcess(Long processID) {
         Channel channel = this.writeChannels.get(processID);
         if (channel == null) {
-            throw new IllegalArgumentException(ProjectMessages.INVALID_PROCESS_ID_FOR_WRITE_CHANNEL);
+            throw new IllegalArgumentException(Messages.INVALID_PROCESS_ID_FOR_WRITE_CHANNEL);
         }
         return channel;
     }
@@ -54,7 +54,7 @@ public class Process extends Thread {
     public Channel getReadChannelForProcess(Long processID) {
         Channel channel = this.writeChannels.get(processID);
         if (channel == null) {
-            throw new IllegalArgumentException(ProjectMessages.INVALID_PROCESS_ID_FOR_WRITE_CHANNEL);
+            throw new IllegalArgumentException(Messages.INVALID_PROCESS_ID_FOR_WRITE_CHANNEL);
         }
         return channel;
     }
@@ -98,11 +98,11 @@ public class Process extends Thread {
     public String toString() {
         return new StringBuilder("Process ID : ")
                 .append(getProcessID())
-                .append(ProjectMessages.SPACE)
+                .append(Messages.SPACE)
                 .append("and")
-                .append(ProjectMessages.SPACE)
+                .append(Messages.SPACE)
                 .append("Data : ")
-                .append(ProjectMessages.SPACE)
+                .append(Messages.SPACE)
                 .append(getLocalState())
                 .toString();
     }

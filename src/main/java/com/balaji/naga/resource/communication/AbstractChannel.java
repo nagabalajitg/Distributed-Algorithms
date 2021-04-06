@@ -1,7 +1,7 @@
 package com.balaji.naga.resource.communication;
 
 import com.balaji.naga.resource.compute.Process;
-import com.balaji.naga.utils.ProjectMessages;
+import com.balaji.naga.utils.Messages;
 
 import java.util.logging.Logger;
 
@@ -37,7 +37,7 @@ public abstract class AbstractChannel implements Channel{
         return new StringBuilder()
                 .append("Channel ID : ")
                 .append(getChannelID())
-                .append(ProjectMessages.SPACE)
+                .append(Messages.SPACE)
                 .append("and Processes are ")
                 .append(process1.getProcessID())
                 .append(" and ")

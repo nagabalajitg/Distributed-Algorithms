@@ -2,8 +2,9 @@ package com.balaji.naga.resource;
 
 import com.balaji.naga.message.Message;
 import com.balaji.naga.resource.communication.Channel;
+import com.balaji.naga.resource.communication.Channel.ChannelType;
 import com.balaji.naga.resource.compute.Process;
-import com.balaji.naga.utils.ProjectMessages;
+import com.balaji.naga.utils.Messages;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -15,10 +16,14 @@ public abstract class Orchestration {
     private Map<Long, Channel> channelIDToChannel = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(Orchestration.class.getName());
 
+    protected Process createAProcess(long processID, long initialValue) {
+        return new Process(processID, initialValue);
+    }
+
     private void createProcessInstances(int noOfProcess, long initialValue) {
         for (long i = 0; i < noOfProcess; i ++) {
             long processID = i + 1;
-            processIDToProcess.put(processID, new Process(processID, initialValue));
+            processIDToProcess.put(processID, createAProcess(processID, initialValue));
         }
     }
 
@@ -59,7 +64,7 @@ public abstract class Orchestration {
     /*
      * TODO : Process creation and association can be done in a better way
      */
-    public void createProcess(int noOfProcess, long initialValue, Channel.ChannelType type) {
+    public void createProcess(int noOfProcess, long initialValue, ChannelType type) {
         this.createProcessInstances(noOfProcess, initialValue);
         this.createChannels(noOfProcess, type);
         this.bootProcesses();
@@ -90,11 +95,11 @@ public abstract class Orchestration {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Processes : ");
-        builder.append(ProjectMessages.NEWLINE);
+        builder.append(Messages.NEWLINE);
 
         for (Process process : this.getAllProcesses()) {
             builder.append(process.toString());
-            builder.append(ProjectMessages.NEWLINE);
+            builder.append(Messages.NEWLINE);
         }
 
         return builder.toString();
@@ -104,11 +109,11 @@ public abstract class Orchestration {
         StringBuilder builder = new StringBuilder();
 
         builder.append("Channels : ");
-        builder.append(ProjectMessages.NEWLINE);
+        builder.append(Messages.NEWLINE);
 
         for (Channel channel : this.getAllChannels()) {
             builder.append(channel.toString());
-            builder.append(ProjectMessages.NEWLINE);
+            builder.append(Messages.NEWLINE);
         }
 
         return builder.toString();
@@ -117,10 +122,10 @@ public abstract class Orchestration {
     @Override
     public String toString(){
         return new StringBuilder()
-                .append(ProjectMessages.NEWLINE)
+                .append(Messages.NEWLINE)
                 .append(toStringProcesses())
-                .append(ProjectMessages.NEWLINE)
-                .append(ProjectMessages.NEWLINE)
+                .append(Messages.NEWLINE)
+                .append(Messages.NEWLINE)
                 .append(toStringChannel())
                 .toString();
     }
