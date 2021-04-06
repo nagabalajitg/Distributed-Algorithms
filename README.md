@@ -22,3 +22,9 @@
         3. To print last recorded snapshot to console
             * Enter process ID to get last snapshot
         4. Exit
+### Architecture
+####Class 
+    Process : Holds source & destination and read & write channels.
+    LaiYangProcess : Sub-class of Prcess, holds process color, all snapshots.
+    
+    Message

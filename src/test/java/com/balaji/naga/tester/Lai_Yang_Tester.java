@@ -4,6 +4,7 @@ import com.balaji.naga.algorithms.LaiYangSnapshotAlgorithm;
 import com.balaji.naga.message.LaiYangMessage;
 import com.balaji.naga.message.Message;
 import com.balaji.naga.resource.LaiYangOrchestration;
+import com.balaji.naga.resource.communication.Channel;
 import com.balaji.naga.resource.communication.Channel.ChannelType;
 import com.balaji.naga.snapshot.LaiYangSnapshot;
 import com.balaji.naga.utils.Messages;
@@ -28,11 +29,14 @@ public class Lai_Yang_Tester {
             System.out.print(Messages.ENTER_NO_OF_PROCESS);
             String command = reader.readLine().trim();
 
-            System.out.print(Messages.ENTER_AMOUNT);
+            System.out.println(Messages.ENTER_CHANNEL_TYPE);
+            ChannelType channel = ChannelType.getChannelByInt(Integer.parseInt(reader.readLine().trim()));
+
+            System.out.print(Messages.ENTER_INITIAL_AMOUNT);
             String initialAmount = reader.readLine().trim();
 
             orchestration = new LaiYangOrchestration();
-            orchestration.createProcess(Integer.parseInt(command), Long.valueOf(initialAmount), ChannelType.FIFO);
+            orchestration.createProcess(Integer.parseInt(command), Long.valueOf(initialAmount), channel);
             boolean flag = false;
 
             while (true) {
