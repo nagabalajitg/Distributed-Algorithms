@@ -1,14 +1,15 @@
 package com.balaji.naga.message;
 
+import com.balaji.naga.resource.communication.Channel;
 import com.balaji.naga.resource.compute.Process;
 
-public class MessageData implements Message {
+public class DataMessage implements Message {
     private Long to;
     private Long from;
     private Long inTransit;
-    private static final MessageType MESSAGE_TYPE = MessageType.Data;
+    private static final MessageType MESSAGE_TYPE = MessageType.DATA;
 
-    public MessageData (Long data, Long from, Long to) {
+    public DataMessage(Long data, Long from, Long to) {
         this.to = to;
         this.from = from;
         this.inTransit = data;
@@ -35,12 +36,13 @@ public class MessageData implements Message {
     }
 
     @Override
-    public void processAtSender(Process process) {
+    public void processAtSender(Process process, Channel channel) {
         process.updateData(-inTransit);
+        channel.sendMessage(this);
     }
 
     @Override
-    public void processAtReceiver(Process process) {
+    public void processAtReceiver(Process process, Channel channel) {
         process.updateData(inTransit);
     }
 }

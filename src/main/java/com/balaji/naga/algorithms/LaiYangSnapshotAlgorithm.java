@@ -1,29 +1,30 @@
 package com.balaji.naga.algorithms;
 
-import java.util.Iterator;
-
-public interface LaiYang extends SnapshotAlgorithms {
+public interface LaiYangSnapshotAlgorithm extends SnapshotAlgorithms {
     enum MessageColor {
         RED, WHITE
     }
 
-    class History {
-        private long time;
-        private long channelID;
-
-        public History (long time, long channelID) {
-            this.time = time;
-            this.channelID = channelID;
+    class WhiteMessageLog {
+        public enum MessageBoundType {
+            INBOUND, OUTBOUND
         }
 
-        public long getTime() {
-            return this.time;
+        private Long data;
+        private Long timestamp;
+        private Long processID;
+        private MessageBoundType boundType;
+
+        public WhiteMessageLog(MessageBoundType boundType, Long data, Long processID, Long timestamp) {
+            this.data = data;
+            this.boundType = boundType;
+            this.timestamp = timestamp;
+            this.processID = processID;
         }
 
-        public long getChannelID() {
-            return this.channelID;
+        public Long getData() { return this.data; }
+        public Long getTimestamp() {
+            return this.timestamp;
         }
     }
-
-    Iterator<History> getLog();
 }
