@@ -20,8 +20,8 @@
         4. Exit
 ### Architecture
 #### Class
-    Process : Holds source & destination and read & write channels.
-    LaiYangProcess : Sub-class of Prcess, holds process color, all snapshots.
+    Process -> Holds source & destination and read & write channels.
+    LaiYangProcess -> Sub-class of Prcess, holds process color, all snapshots.
     
     Message -> Interface for Message
     DataMessage -> Generic Message
