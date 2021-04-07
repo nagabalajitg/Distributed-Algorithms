@@ -23,6 +23,20 @@
     Process : Holds source & destination and read & write channels.
     LaiYangProcess : Sub-class of Prcess, holds process color, all snapshots.
     
-    Message
+    Message -> Interface for Message
+    DataMessage -> Generic Message
+    LaiYangMessage -> Algorithm specific implementation where each messages are colored (RED/While)
 
-###CHECK : Lai_Yang_Tester.java to test
+    Channel -> Interface
+    AbstractChannel -> Holds common resource requiments for FIF0 and non-FIFO channels
+    FifoChannel -> Ordered message passing implementation (Guarantee order)
+    NonFifoChannel -> Un-ordered message passing implementation
+    
+    Orchestration -> creates process and setup channels between them
+    LaiYangOrchestration -> Allows to send colored message, prints global state snapshots from a process
+
+### CHECK : Lai_Yang_Tester.java to test
+
+#### Requirements :
+1. Any Operating System
+2. JDK-7 or above
