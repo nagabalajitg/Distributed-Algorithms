@@ -1,16 +1,12 @@
-# Distributed Algorithms
-
-## The purpose of this repo to build algorithms for distributed system.
-
 ### About System
     P2P message passing system
     Each Process will have two channels between each proceses (Write and Read Channel) 
 
 ### Algorithms
 1. Lai-Yang Snapshot
-   ####Implementation :
-   Each process is a background worker, read data like event-loop. 
-   ####Steps :
+   #### Implementation :
+   Each process is a background worker, read data like event-loop.
+   #### Steps :
     1. Enter no of process & initial amount.
     2. Enter Number
         1. To send White-Message
@@ -23,8 +19,10 @@
             * Enter process ID to get last snapshot
         4. Exit
 ### Architecture
-####Class 
+#### Class
     Process : Holds source & destination and read & write channels.
     LaiYangProcess : Sub-class of Prcess, holds process color, all snapshots.
     
     Message
+
+###CHECK : Lai_Yang_Tester.java to test
