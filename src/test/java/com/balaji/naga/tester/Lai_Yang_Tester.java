@@ -27,22 +27,22 @@ public class Lai_Yang_Tester {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             System.out.print(Messages.ENTER_NO_OF_PROCESS);
-            String command = reader.readLine().trim();
+            int noOfProcesses = Integer.parseInt(reader.readLine().trim());
 
             System.out.println(Messages.ENTER_CHANNEL_TYPE);
             ChannelType channel = ChannelType.getChannelByInt(Integer.parseInt(reader.readLine().trim()));
 
             System.out.print(Messages.ENTER_INITIAL_AMOUNT);
-            String initialAmount = reader.readLine().trim();
+            int initialAmount = Integer.parseInt(reader.readLine().trim());
 
             orchestration = new LaiYangOrchestration();
-            orchestration.createProcess(Integer.parseInt(command), Long.valueOf(initialAmount), channel);
+            orchestration.createProcess(noOfProcesses, initialAmount, channel);
             boolean flag = false;
 
             while (true) {
                 try {
                     System.out.println(Messages.LAI_YANG_TESTER_CHOICE);
-                    command = reader.readLine().trim();
+                    String command = reader.readLine().trim();
                     switch (Integer.parseInt(command)) {
                         case 1 :
                             System.out.print(Messages.ENTER_FROM);
@@ -93,9 +93,10 @@ public class Lai_Yang_Tester {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         } finally {
-            if(orchestration != null) {
-                orchestration.shutdownAllProcess();
-            }
+//            TODO: Need a way to shutdown all threads
+//            if(orchestration != null) {
+//                orchestration.shutdownAllProcess();
+//            }
         }
         System.out.println("Ends !!");
     }
