@@ -7,8 +7,10 @@
    #### Implementation :
    Each process is a background worker, read data like event-loop.
    #### Steps :
-    1. Enter no of process & initial amount.
-    2. Enter Number
+    1. Enter no of process.
+    2. Enter Channel Type
+    3. Enter initial amount for all processes   
+    4. Enter Number to do message transfer and to record global state
         1. To send White-Message
             1. Enter Source process ID
             2. Enter Destination process ID
