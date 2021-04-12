@@ -4,6 +4,8 @@ import com.balaji.naga.algorithms.LaiYangSnapshotAlgorithm;
 import com.balaji.naga.message.LaiYangMessage;
 import com.balaji.naga.message.Message;
 import com.balaji.naga.resource.LaiYangOrchestration;
+import com.balaji.naga.resource.Orchestration.ProcessInitMeta;
+import com.balaji.naga.resource.Orchestration.ProcessInitMeta.ProcessInitMetaType;
 import com.balaji.naga.resource.communication.Channel;
 import com.balaji.naga.resource.communication.Channel.ChannelType;
 import com.balaji.naga.snapshot.LaiYangSnapshot;
@@ -25,6 +27,7 @@ public class Lai_Yang_Tester {
         System.out.println("Start !");
         LaiYangOrchestration orchestration = null;
         try {
+            orchestration = new LaiYangOrchestration();
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             System.out.print(Messages.ENTER_NO_OF_PROCESS);
             int noOfProcesses = Integer.parseInt(reader.readLine().trim());
@@ -32,11 +35,23 @@ public class Lai_Yang_Tester {
             System.out.println(Messages.ENTER_CHANNEL_TYPE);
             ChannelType channel = ChannelType.getChannelByInt(Integer.parseInt(reader.readLine().trim()));
 
-            System.out.print(Messages.ENTER_INITIAL_AMOUNT);
-            int initialAmount = Integer.parseInt(reader.readLine().trim());
+            System.out.println(Messages.ENTER_FIXED_VARIABLE);
+            ProcessInitMetaType processInitMetaType = ProcessInitMetaType.getTypeFromInt( Integer.parseInt(reader.readLine().trim()));
 
-            orchestration = new LaiYangOrchestration();
-            orchestration.createProcess(noOfProcesses, initialAmount, channel);
+            if (processInitMetaType == ProcessInitMetaType.FIXED) {
+                System.out.println(Messages.ENTER_INITIAL_AMOUNT);
+                long initialValue = Long.parseLong(reader.readLine().trim());
+                orchestration.createProcess(noOfProcesses, initialValue, channel);
+            } else {
+                int process = 1;
+                ProcessInitMeta meta = new ProcessInitMeta(noOfProcesses);
+                do {
+                    System.out.print(Messages.ENTER_INITIAL_AMOUNT_FOR_PROCESS + process + " : ");
+                    meta.addInitialValue(Long.parseLong(reader.readLine().trim()));
+                } while (process ++ < noOfProcesses);
+
+                orchestration.createProcess(meta, channel);
+            }
             boolean flag = false;
 
             while (true) {

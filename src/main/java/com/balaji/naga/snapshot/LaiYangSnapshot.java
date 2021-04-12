@@ -205,6 +205,11 @@ public class LaiYangSnapshot implements Snapshot {
         StringBuilder builder = new StringBuilder();
         Long initiatedProcessID = this.getInitiatorProcessID();
 
+        builder.append(Messages.DIVIDER);
+        builder.append(Messages.NEWLINE);
+        builder.append(Messages.DIVIDER);
+        builder.append(Messages.NEWLINE);
+
         builder.append("Snapshot taken at ").append(this.getDate());
         builder.append(Messages.NEWLINE);
         builder.append("Initiated ID : ").append(initiatedProcessID);
@@ -219,6 +224,8 @@ public class LaiYangSnapshot implements Snapshot {
         }
 
         for (ComputedProcessStateBean bean : computedProcessStateList) {
+            builder.append(Messages.DIVIDER);
+            builder.append(Messages.NEWLINE);
             Long currentProcessID = bean.getCurrentProcess();
             Long initiatorToProcessDiff = bean.getMessageInTransitFromInitiatorToCurrentProcess();
             Long processToInitiatorDiff = bean.getMessageInTransitFromCurrentProcessToInitiator();
@@ -261,6 +268,7 @@ public class LaiYangSnapshot implements Snapshot {
             builder.append(Messages.NEWLINE);
         }
 
+        builder.append(Messages.DIVIDER);
         builder.append(Messages.NEWLINE);
 
         if (isInGlobalConsistentState) {
@@ -268,6 +276,10 @@ public class LaiYangSnapshot implements Snapshot {
         } else {
             builder.append(Messages.PROCESSES_ARE_NOT_IN_GLOBAL_CONSISTENT_STATE);
         }
+        builder.append(Messages.NEWLINE);
+        builder.append(Messages.DIVIDER);
+        builder.append(Messages.NEWLINE);
+        builder.append(Messages.DIVIDER);
 
         return builder.toString();
     }

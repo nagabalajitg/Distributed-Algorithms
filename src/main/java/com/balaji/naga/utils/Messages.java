@@ -4,8 +4,10 @@ public interface Messages {
     String SPACE = " ";
     String NEWLINE = "\n";
 
+    String DIVIDER = "======================================";
     String ENTER_VALID_NUMBER = "Enter valid number";
     String ENTER_INITIAL_AMOUNT = "Enter initial amount : ";
+    String ENTER_INITIAL_AMOUNT_FOR_PROCESS = "Enter initial amount for process ";
     String TYPE_CHANNEL_TYPE = "Type must be 1 or 2";
     String ENTER_FROM = "Enter Source Process ID : ";
     String ENTER_TO = "Enter Destination Process ID : ";
@@ -16,8 +18,10 @@ public interface Messages {
     String SNAPSHOT_DOES_NOT_EXIST = "Snapshot(s) does not exist";
     String ENTER_PROPER_CHANNEL = "Enter proper channel\n";
     String ENTER_CHANNEL_TYPE = "Enter Channel Type :\n1. FIFO\n2. Non-FIFO";
+    String ENTER_FIXED_VARIABLE = "Enter  :\n1. To initiate all process with single value\n2. To initiate all process with different values";
     String LAI_YANG_TESTER_CHOICE = "Enter operation type :\n1.Send White Message\n2.Global Snapshot\n3.Print Snapshot\n4.Exit";
 
+    String INVALID_TYPE = "Invalid Type";
     String INVALID_CHANNEL_TYPE = "Invalid Channel Type";
     String TRANSACTION_COMPLETE = "Transaction complete";
     String SNAPSHOT_IS_IN_PROGRESS = "Snapshot is in progress";
