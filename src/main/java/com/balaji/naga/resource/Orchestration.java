@@ -16,8 +16,67 @@ public abstract class Orchestration {
     private Map<Long, Channel> channelIDToChannel = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(Orchestration.class.getName());
 
+    public static class ProcessInitMeta {
+        private int noOfProcesses;
+        private List<Long> initialValueList;
+
+        public  enum ProcessInitMetaType{
+            FIXED(1), VARIABLE(2);
+
+            private int type;
+
+            ProcessInitMetaType(int type) {
+                this.type = type;
+            }
+
+            public int getMetaType() {
+                return this.type;
+            }
+
+            public static ProcessInitMetaType getTypeFromInt(int type) {
+                for(ProcessInitMetaType metaType : ProcessInitMetaType.values()) {
+                    if (metaType.getMetaType() == type) {
+                        return metaType;
+                    }
+                }
+                throw new IllegalArgumentException(Messages.INVALID_TYPE);
+            }
+        }
+
+        public ProcessInitMeta(int noOfProcesses) {
+            this.noOfProcesses = noOfProcesses;
+            this.initialValueList = new ArrayList<>(noOfProcesses);
+        }
+
+        public void addInitialValue(long initialValue) {
+            if (this.initialValueList.size() < noOfProcesses) {
+                this.initialValueList.add(initialValue);
+            }
+        }
+
+        public int getTotalNoOfProcess() {
+            return this.noOfProcesses;
+        }
+
+        public long getInitialValueOf(long nthProcess) {
+            int intValue = (int) nthProcess - 1;
+            return this.initialValueList.get(intValue).longValue();
+        }
+        public Iterator<Long> iterateInitialValues() {
+            return this.initialValueList.iterator();
+        }
+    }
+
     protected Process createAProcess(long processID, long initialValue) {
         return new Process(processID, initialValue);
+    }
+
+    private void createProcessInstances(ProcessInitMeta meta) {
+        Iterator<Long> iterator = meta.iterateInitialValues();
+        for (long i = 0; i < meta.getTotalNoOfProcess(); i ++) {
+            long processID = i + 1;
+            processIDToProcess.put(processID, createAProcess(processID, iterator.next()));
+        }
     }
 
     private void createProcessInstances(int noOfProcess, long initialValue) {
@@ -61,12 +120,15 @@ public abstract class Orchestration {
         }
     }
 
-    /*
-     * TODO : Process creation and association can be done in a better way
-     */
     public void createProcess(int noOfProcess, long initialValue, ChannelType type) {
         this.createProcessInstances(noOfProcess, initialValue);
         this.createChannels(noOfProcess, type);
+        this.bootProcesses();
+    }
+
+    public void createProcess(ProcessInitMeta meta, ChannelType type) {
+        this.createProcessInstances(meta);
+        this.createChannels(meta.getTotalNoOfProcess(), type);
         this.bootProcesses();
     }
 
