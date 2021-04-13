@@ -1,6 +1,6 @@
 ### About System
-    P2P message passing system
-    Each Process will have two channels between each proceses (Write and Read Channel) 
+1. P2P message passing distributed system. So message sent in a channel will be immediately consumed by destination process, if it is up and running.
+2. Each Process will have two channels between each processes (Write and Read Channel)
 
 ### Algorithms
 1. Lai-Yang Snapshot
